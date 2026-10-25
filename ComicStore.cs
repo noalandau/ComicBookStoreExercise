@@ -1,8 +1,4 @@
 namespace ComicBookStore;
-
-/// <summary>
-/// מחלקת חנות ספרי הקומיקס - מכילה את האוספים והפעולות שהתלמידים יידרשו לממש.
-/// </summary>
 public class ComicStore
 {
     // רשימת חוברות הקומיקס בחנות
@@ -52,7 +48,18 @@ public class ComicStore
     /// </summary>
     public void AddOrUpdateComic(ComicBook newComic)
     {
-        // TODO: התלמידים יכתבו את הקוד כאן
+        
+        foreach (ComicBook c in Inventory)
+        {
+            if (c.Title == newComic.Title)
+            {
+                c.StockQuantity = c.StockQuantity + newComic.StockQuantity;
+                                return;
+            }
+        }
+        
+            Inventory.Add(newComic);
+        
     }
 
     /// <summary>
@@ -61,8 +68,17 @@ public class ComicStore
     /// </summary>
     public bool UpdateStock(string title, int newQuantity)
     {
-        // TODO: התלמידים יכתבו את הקוד כאן
-        return false;
+        bool comicExists = false;
+        foreach (ComicBook c in Inventory)
+        {
+            if (c.Title == title)
+            {
+                c.StockQuantity = newQuantity;
+                comicExists = true;
+            }
+        }
+
+        return comicExists;
     }
 
     /// <summary>
@@ -70,8 +86,15 @@ public class ComicStore
     /// </summary>
     public List<ComicBook> SearchByHero(string heroName)
     {
-        // TODO: התלמידים יכתבו את הקוד כאן
-        return new List<ComicBook>();
+        List<ComicBook> heroNameList = new List<ComicBook>();
+        foreach (ComicBook c in Inventory) 
+        {
+            if (c.Hero == heroName)
+            {
+                heroNameList.Add(c);
+            }
+        }
+        return heroNameList;
     }
 
     /// <summary>
@@ -79,7 +102,13 @@ public class ComicStore
     /// </summary>
     public bool IsInStock(string title)
     {
-        // TODO: התלמידים יכתבו את הקוד כאן
+        foreach (ComicBook c in Inventory)
+        {
+            if (c.Title == title && c.StockQuantity > 0)
+            {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -88,8 +117,12 @@ public class ComicStore
     /// </summary>
     public Dictionary<string, int> GetStockDictionary()
     {
-        // TODO: התלמידים יכתבו את הקוד כאן
-        return new Dictionary<string, int>();
+        Dictionary<string, int> stockDictionary = new Dictionary<string, int>();
+        foreach (ComicBook c in Inventory)
+        {
+            stockDictionary[c.Title] = c.StockQuantity;
+        }
+        return stockDictionary;
     }
 
     /// <summary>
@@ -99,7 +132,14 @@ public class ComicStore
     /// </summary>
     public int GetQuantityFromDictionary(string title)
     {
-        // TODO: התלמידים יכתבו את הקוד כאן (חובה לזמן את GetStockDictionary())
+        Dictionary<string, int> stockDictionary = GetStockDictionary();
+        foreach (ComicBook c in Inventory)
+        {
+            if (stockDictionary.ContainsKey(title))
+            {
+                return stockDictionary[title];
+            }
+        }
         return -1;
     }
 
@@ -109,7 +149,18 @@ public class ComicStore
     /// </summary>
     public string GetHeroWithMostComics()
     {
-        // TODO: התלמידים יכתבו את הקוד כאן
-        return string.Empty;
+        Dictionary<string, int> stockDictionary = GetStockDictionary();
+        int maxCount = 0;
+        string heroWithMostComics = "";
+        foreach (ComicBook c in Inventory)
+        {
+            int count = stockDictionary[c.Title] + c.StockQuantity;
+            if (count > maxCount)
+            {
+                maxCount = count;
+                heroWithMostComics = c.Hero;
+            }
+        }
+        return heroWithMostComics;
     }
 }
